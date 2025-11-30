@@ -1,1466 +1,2080 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Group Project Tracker</title>
-  <style>
-    /* Your existing CSS remains exactly the same */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body { 
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-      background: #f4f6f9; 
-      margin: 0; 
-      padding: 0; 
-      color: #333;
-      line-height: 1.6;
-    }
-    
-    header { 
-      background: #4CAF50; 
-      color: white; 
-      padding: 20px; 
-      text-align: center; 
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    
-    .hidden { 
-      display: none; 
-    }
-    
-    .container { 
-      width: 90%; 
-      max-width: 1200px; 
-      margin: 30px auto; 
-    }
-    
-    .card { 
-      background: white; 
-      padding: 25px; 
-      margin: 20px 0; 
-      border-radius: 12px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    }
-    
-    h2 {
-      color: #2c3e50;
-      margin-bottom: 20px;
-      border-bottom: 2px solid #eaeaea;
-      padding-bottom: 10px;
-    }
-    
-    h3 {
-      color: #34495e;
-      margin-bottom: 15px;
-    }
-    
-    input, button, textarea, select { 
-      width: 100%; 
-      padding: 14px; 
-      margin: 10px 0; 
-      border: 1px solid #ddd; 
-      border-radius: 8px; 
-      font-family: inherit;
-      font-size: 16px;
-    }
-    
-    input:focus, textarea:focus, select:focus {
-      outline: none;
-      border-color: #4CAF50;
-      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
-    }
-    
-    button { 
-      background: #4CAF50; 
-      color: white; 
-      border: none; 
-      cursor: pointer; 
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-    
-    button:hover { 
-      background: #45a049; 
-      transform: translateY(-2px);
-    }
-    
-    button.secondary {
-      background: #6c757d;
-    }
-    
-    button.secondary:hover {
-      background: #5a6268;
-    }
-    
-    button.danger {
-      background: #f44336;
-    }
-    
-    button.danger:hover {
-      background: #d32f2f;
-    }
-    
-    .report { 
-      padding: 12px 15px; 
-      background: #e8f5e9; 
-      margin: 10px 0; 
-      border-radius: 8px; 
-      border-left: 4px solid #4CAF50;
-    }
-    
-    .chat-box { 
-      max-height: 300px; 
-      overflow-y: auto; 
-      border: 1px solid #e0e0e0; 
-      padding: 15px; 
-      background: #fafafa; 
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-    
-    .message { 
-      padding: 10px 15px; 
-      margin: 8px 0; 
-      border-radius: 8px; 
-    }
-    
-    .student-msg { 
-      background: #e1f5fe; 
-      border-left: 3px solid #03a9f4;
-    }
-    
-    .my-msg {
-      background: #e8f5e9;
-      border-left: 3px solid #4CAF50;
-      margin-left: 20%;
-    }
-    
-    .chat-header { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      margin-bottom: 15px; 
-    }
-    
-    .flex-buttons { 
-      display: flex; 
-      gap: 12px; 
-    }
-    
-    .flex-buttons button { 
-      width: auto; 
-      padding: 10px 18px;
-    }
-    
-    .alert { 
-      padding: 14px; 
-      border-radius: 8px; 
-      margin: 15px 0; 
-      font-weight: 500;
-    }
-    
-    .alert-success { 
-      background: #d4edda; 
-      color: #155724; 
-      border-left: 4px solid #28a745;
-    }
-    
-    .alert-error { 
-      background: #f8d7da; 
-      color: #721c24; 
-      border-left: 4px solid #dc3545;
-    }
-    
-    .group-buttons { 
-      display: flex; 
-      gap: 12px; 
-      margin-top: 15px; 
-    }
-    
-    .group-buttons button { 
-      width: auto; 
-      padding: 10px 18px;
-    }
-    
-    .user-info {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: #f8f9fa;
-      padding: 10px 18px;
-      border-radius: 25px;
-      font-size: 0.95em;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    
-    .user-info span {
-      font-weight: 600;
-      color: #4CAF50;
-    }
-    
-    .timestamp {
-      font-size: 0.75em;
-      color: #777;
-      margin-top: 5px;
-      display: block;
-    }
-    
-    .tabs {
-      display: flex;
-      border-bottom: 1px solid #ddd;
-      margin-bottom: 20px;
-      overflow-x: auto;
-    }
-    
-    .tab {
-      padding: 12px 24px;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-    
-    .tab.active {
-      border-bottom: 3px solid #4CAF50;
-      color: #4CAF50;
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-    }
-    
-    .login-container {
-      max-width: 450px;
-      margin: 80px auto;
-    }
-    
-    .group-card {
-      border-left: 4px solid #4CAF50;
-      margin-bottom: 25px;
-    }
-    
-    .deadline {
-      background: #fff3cd;
-      padding: 10px 15px;
-      border-radius: 8px;
-      margin: 10px 0;
-      border-left: 4px solid #ffc107;
-    }
-    
-    .deadline.urgent {
-      background: #f8d7da;
-      border-left: 4px solid #dc3545;
-    }
-    
-    .file-upload {
-      background: #f8f9fa;
-      padding: 15px;
-      border-radius: 8px;
-      margin: 15px 0;
-      border: 2px dashed #dee2e6;
-    }
-    
-    .file-list {
-      margin-top: 10px;
-    }
-    
-    .file-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      background: white;
-      border-radius: 6px;
-      margin: 5px 0;
-      border: 1px solid #eee;
-    }
-    
-    .notification-badge {
-      background: #dc3545;
-      color: white;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 0.7em;
-      margin-left: 5px;
-    }
-    
-    .notification-dot {
-      width: 10px;
-      height: 10px;
-      background: #dc3545;
-      border-radius: 50%;
-      display: inline-block;
-      margin-left: 5px;
-    }
-    
-    .grade-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 15px 0;
-    }
-    
-    .grade-table th, .grade-table td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: left;
-    }
-    
-    .grade-table th {
-      background-color: #f4f6f9;
-      font-weight: 600;
-    }
-    
-    .grade-table tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    
-    .grade-input {
-      width: 80px;
-      padding: 8px;
-      text-align: center;
-    }
-    
-    .grade-summary {
-      background: #e8f4f8;
-      padding: 15px;
-      border-radius: 8px;
-      margin: 15px 0;
-    }
-    
-    .grade-badge {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 0.8em;
-      font-weight: 600;
-      margin-left: 10px;
-    }
-    
-    .grade-A { background: #4CAF50; color: white; }
-    .grade-B { background: #8BC34A; color: white; }
-    .grade-C { background: #FFC107; color: black; }
-    .grade-D { background: #FF9800; color: white; }
-    .grade-F { background: #F44336; color: white; }
-    
-    @media (max-width: 768px) {
-      .container {
-        width: 95%;
-      }
-      
-      .flex-buttons, .group-buttons {
-        flex-direction: column;
-      }
-      
-      .user-info {
-        position: relative;
-        top: 0;
-        right: 0;
-        margin-bottom: 20px;
-        justify-content: center;
-      }
-      
-      header {
-        padding: 15px 10px;
-      }
-      
-      .tab {
-        padding: 10px 15px;
-        font-size: 0.9em;
-      }
-      
-      .grade-table {
-        font-size: 0.85em;
-      }
-      
-      .grade-input {
-        width: 60px;
-      }
-    }
-  </style>
-  
-  <!-- React CDN -->
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Project Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        input, textarea, select, button {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .secondary {
+            background: #6c757d;
+        }
+
+        .secondary:hover {
+            background: #5a6268;
+        }
+
+        .danger {
+            background: #dc3545;
+        }
+
+        .danger:hover {
+            background: #c82333;
+        }
+
+        .info {
+            background: #17a2b8;
+        }
+
+        .info:hover {
+            background: #138496;
+        }
+
+        .warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .warning:hover {
+            background: #e0a800;
+        }
+
+        .login-container {
+            max-width: 450px;
+            margin: 80px auto;
+        }
+
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: #ffeaea;
+            border-radius: 5px;
+        }
+
+        .success {
+            color: #27ae60;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: #eaffea;
+            border-radius: 5px;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 12px 20px;
+            border-radius: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .user-info span {
+            font-weight: 600;
+            color: #4CAF50;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid #4CAF50;
+            color: #4CAF50;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .group-card {
+            border-left: 4px solid #4CAF50;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .group-card.completed {
+            border-left-color: #6c757d;
+            opacity: 0.8;
+        }
+
+        .group-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .report {
+            padding: 12px 15px;
+            background: #e8f5e9;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .message {
+            padding: 10px 15px;
+            margin: 8px 0;
+            border-radius: 8px;
+        }
+
+        .student-msg {
+            background: #e1f5fe;
+            border-left: 3px solid #03a9f4;
+        }
+
+        .my-msg {
+            background: #e8f5e9;
+            border-left: 3px solid #4CAF50;
+            margin-left: 20%;
+        }
+
+        .chat-box {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .timestamp {
+            font-size: 0.75em;
+            color: #777;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .grade-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .grade-table th, .grade-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .grade-table th {
+            background-color: #f4f6f9;
+            font-weight: 600;
+        }
+
+        .grade-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .grade-input {
+            width: 80px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .grade-A { background: #4CAF50; color: white; }
+        .grade-B { background: #8BC34A; color: white; }
+        .grade-C { background: #FFC107; color: black; }
+        .grade-D { background: #FF9800; color: white; }
+        .grade-F { background: #F44336; color: white; }
+
+        .submitted-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .pending-badge {
+            background: #FF9800;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .completed-badge {
+            background: #6c757d;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .file-upload {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px dashed #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload.drag-over {
+            background: #e3f2fd;
+            border-color: #2196F3;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 6px;
+            margin: 8px 0;
+            border: 1px solid #eee;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .file-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .file-actions button {
+            width: auto;
+            padding: 6px 12px;
+            font-size: 0.85em;
+        }
+
+        .group-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .group-buttons button {
+            width: auto;
+            padding: 10px 18px;
+        }
+
+        .project-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .project-details h4 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        .project-details p {
+            margin: 8px 0;
+        }
+
+        .project-deadline {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .project-deadline.past {
+            color: #6c757d;
+        }
+
+        .file-preview {
+            max-width: 100%;
+            max-height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .shared-files-container {
+            margin-top: 20px;
+        }
+
+        .shared-file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            margin: 8px 0;
+            border-left: 4px solid #4CAF50;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .file-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .file-meta {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .shared-file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .shared-file-actions button {
+            width: auto;
+            padding: 6px 12px;
+            font-size: 0.85em;
+        }
+
+        .no-files, .no-projects {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .project-selector {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .project-selector select {
+            width: auto;
+            min-width: 250px;
+        }
+
+        .project-status {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .submission-checklist {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .submission-checklist h4 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+
+        .checklist-item input {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .uploaded-files {
+            margin: 15px 0;
+        }
+
+        .uploaded-file {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 6px;
+            margin: 5px 0;
+            border-left: 3px solid #4CAF50;
+        }
+
+        .file-remove {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .file-remove:hover {
+            background: #c82333;
+        }
+
+        .upload-progress {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background: #4CAF50;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .submission-instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .submission-instructions h4 {
+            margin-top: 0;
+            color: #1565C0;
+        }
+
+        .submission-instructions ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .submission-instructions li {
+            margin: 5px 0;
+        }
+
+        .profile-form {
+            max-width: 500px;
+        }
+
+        .profile-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .profile-details p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .profile-details strong {
+            color: #2c3e50;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: auto;
+            padding: 25px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+            
+            .group-buttons {
+                flex-direction: column;
+            }
+            
+            .user-info {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+            
+            .file-actions, .shared-file-actions {
+                flex-direction: column;
+            }
+            
+            .shared-file-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .shared-file-actions {
+                margin-top: 10px;
+                width: 100%;
+            }
+            
+            .shared-file-actions button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <h1>Student Group Project Management</h1>
+    </header>
 
-<header>
-  <h1>Student Group Project Management</h1>
-  <div id="notificationArea" class="hidden"></div>
-</header>
-
-<!-- React Root -->
-<div id="react-root"></div>
-
-<!-- Your existing HTML structure (will be hidden initially) -->
-<div class="container login-container" id="loginPage">
-  <div class="card">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username (e.g. student1)">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <p id="errorMsg" style="color:red; text-align: center; margin-top: 15px;"></p>
-  </div>
-</div>
-
-<div id="teacherDashboard" class="container hidden">
-  <!-- Your existing teacher dashboard HTML -->
-</div>
-
-<div id="studentDashboard" class="container hidden">
-  <!-- Your existing student dashboard HTML -->
-</div>
-
-<script type="text/babel">
-  // React Components
-  const { useState, useEffect } = React;
-
-  // React Login Component
-  function ReactLogin() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-
-    const handleLogin = () => {
-      if (users[username] && users[username].password === simpleHash(password)) {
-        localStorage.setItem("loggedInUser", username);
-        localStorage.setItem("role", users[username].role);
-        setError('');
-        // Trigger the original showDashboard function
-        showDashboard(users[username].role, username);
-      } else {
-        setError('Invalid credentials!');
-      }
-    };
-
-    return React.createElement('div', { className: 'container login-container' },
-      React.createElement('div', { className: 'card' },
-        React.createElement('h2', null, 'Login'),
-        React.createElement('input', {
-          type: 'text',
-          placeholder: 'Username (e.g. student1)',
-          value: username,
-          onChange: (e) => setUsername(e.target.value)
-        }),
-        React.createElement('input', {
-          type: 'password',
-          placeholder: 'Password',
-          value: password,
-          onChange: (e) => setPassword(e.target.value)
-        }),
-        React.createElement('button', { onClick: handleLogin }, 'Login'),
-        error && React.createElement('p', { 
-          style: { color: 'red', textAlign: 'center', marginTop: '15px' } 
-        }, error)
-      )
-    );
-  }
-
-  // React Teacher Dashboard Component
-  function ReactTeacherDashboard({ username }) {
-    const [activeTab, setActiveTab] = useState('createGroupTab');
-    const [alert, setAlert] = useState({ message: '', type: '' });
-
-    const showAlert = (message, type) => {
-      setAlert({ message, type });
-      setTimeout(() => setAlert({ message: '', type: '' }), 3000);
-    };
-
-    return React.createElement('div', { className: 'container' },
-      React.createElement('div', { className: 'user-info' },
-        'Logged in as: ',
-        React.createElement('span', { id: 'teacherUsername' }, users[username].name),
-        React.createElement('button', { 
-          onClick: logout, 
-          className: 'secondary',
-          style: { padding: '6px 12px', fontSize: '0.85em' }
-        }, 'Logout')
-      ),
-      
-      React.createElement('h2', null, 'Teacher Dashboard'),
-      
-      alert.message && React.createElement('div', { 
-        className: `alert alert-${alert.type === 'success' ? 'success' : 'error'}` 
-      }, alert.message),
-      
-      React.createElement('div', { className: 'tabs' },
-        ['Create Group', 'Manage Groups', 'Grading', 'Notifications'].map(tab => 
-          React.createElement('div', {
-            key: tab,
-            className: `tab ${activeTab === `${tab.toLowerCase().replace(' ', '')}Tab` ? 'active' : ''}`,
-            onClick: () => setActiveTab(`${tab.toLowerCase().replace(' ', '')}Tab`)
-          }, tab)
-        )
-      ),
-      
-      // Tab content would go here in a full implementation
-      React.createElement('div', null,
-        'React Teacher Dashboard - This is where React components would replace existing functionality'
-      )
-    );
-  }
-
-  // Main React App Component
-  function App() {
-    const [currentView, setCurrentView] = useState('login');
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-      // Check if user is already logged in
-      const loggedInUser = localStorage.getItem("loggedInUser");
-      const role = localStorage.getItem("role");
-      
-      if (loggedInUser && role) {
-        setUser({ username: loggedInUser, role });
-        setCurrentView(role === 'teacher' ? 'teacher' : 'student');
-      }
-    }, []);
-
-    const renderView = () => {
-      switch (currentView) {
-        case 'login':
-          return React.createElement(ReactLogin);
-        case 'teacher':
-          return React.createElement(ReactTeacherDashboard, { username: user.username });
-        case 'student':
-          return React.createElement('div', { className: 'container' },
-            'React Student Dashboard - Coming Soon'
-          );
-        default:
-          return React.createElement(ReactLogin);
-      }
-    };
-
-    return renderView();
-  }
-
-  // Initialize React
-  ReactDOM.render(React.createElement(App), document.getElementById('react-root'));
-</script>
-
-<script>
-  // Your original JavaScript code remains exactly the same
-  // Simple hash function for password "hashing" (not secure, for demonstration only)
-  function simpleHash(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) - hash) + str.charCodeAt(i);
-      hash |= 0; // Convert to 32bit integer
-    }
-    return hash.toString();
-  }
-
-  // Mock users with "hashed" passwords - TEACHER NAME CHANGED TO "Dinesh Kumar"
-  const users = {
-    "teacher": { password: simpleHash("admin"), role: "teacher", name: "Dinesh Kumar" },
-    "student1": { password: simpleHash("pass1"), role: "student", name: "Alice Johnson" },
-    "student2": { password: simpleHash("pass2"), role: "student", name: "Bob Williams" },
-    "student3": { password: simpleHash("pass3"), role: "student", name: "Charlie Brown" },
-    "student4": { password: simpleHash("pass4"), role: "student", name: "Diana Miller" },
-    "student5": { password: simpleHash("pass5"), role: "student", name: "Ethan Davis" },
-    "student6": { password: simpleHash("pass6"), role: "student", name: "Fiona Clark" },
-    "student7": { password: simpleHash("pass7"), role: "student", name: "George Wilson" },
-    "student8": { password: simpleHash("pass8"), role: "student", name: "Hannah Martinez" },
-    "student9": { password: simpleHash("pass9"), role: "student", name: "Ian Anderson" },
-    "student10": { password: simpleHash("pass10"), role: "student", name: "Jessica Taylor" }
-  };
-
-  // Load groups from localStorage or initialize with sample data
-  let groups = JSON.parse(localStorage.getItem("groups")) || [
-    {
-      name: "Group A",
-      students: ["student1", "student2", "student3"],
-      project: {
-        title: "Web Application",
-        desc: "Build a responsive web application with user authentication",
-        deadline: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0],
-        milestones: [
-          { title: "Design Phase", deadline: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0], completed: true },
-          { title: "Development Phase", deadline: new Date(Date.now() + 21 * 86400000).toISOString().split('T')[0], completed: false }
-        ]
-      },
-      reports: [
-        { student: "student1", text: "Worked on the login page design", timestamp: new Date(Date.now() - 86400000).toISOString(), files: [] },
-        { student: "student2", text: "Set up the database schema", timestamp: new Date(Date.now() - 172800000).toISOString(), files: [] }
-      ],
-      chat: [
-        { sender: "student1", text: "hi everyone", timestamp: new Date(Date.now() - 3600000).toISOString() },
-        { sender: "student2", text: "hello!", timestamp: new Date(Date.now() - 1800000).toISOString() },
-        { sender: "student1", text: "how's the project going?", timestamp: new Date(Date.now() - 600000).toISOString() }
-      ],
-      files: [],
-      notifications: [],
-      grades: {} // Added for grade management
-    },
-    {
-      name: "Group B",
-      students: ["student4", "student5", "student6"],
-      project: {
-        title: "Mobile App",
-        desc: "Develop a cross-platform mobile application for task management",
-        deadline: new Date(Date.now() + 45 * 86400000).toISOString().split('T')[0],
-        milestones: [
-          { title: "Research", deadline: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0], completed: true },
-          { title: "UI Design", deadline: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0], completed: false }
-        ]
-      },
-      reports: [
-        { student: "student4", text: "Created the initial app layout", timestamp: new Date(Date.now() - 259200000).toISOString(), files: [] }
-      ],
-      chat: [
-        { sender: "student4", text: "Let's meet tomorrow at 3pm", timestamp: new Date(Date.now() - 86400000).toISOString() }
-      ],
-      files: [],
-      notifications: [],
-      grades: {} // Added for grade management
-    }
-  ];
-
-  let currentStudentGroup = null;
-  let lastChatCheck = {};
-  let uploadedFiles = {};
-
-  function login() {
-    let username = document.getElementById("username").value.trim();
-    let password = document.getElementById("password").value.trim();
-    let errorMsg = document.getElementById("errorMsg");
-
-    if (users[username] && users[username].password === simpleHash(password)) {
-      localStorage.setItem("loggedInUser", username);
-      localStorage.setItem("role", users[username].role);
-      showDashboard(users[username].role, username);
-      errorMsg.innerText = "";
-    } else {
-      errorMsg.innerText = "Invalid credentials!";
-    }
-  }
-
-  function showDashboard(role, username) {
-    document.getElementById("loginPage").classList.add("hidden");
-    if (role === "teacher") {
-      document.getElementById("teacherDashboard").classList.remove("hidden");
-      document.getElementById("teacherUsername").textContent = users[username].name;
-      updateGroupsList();
-      checkTeacherNotifications();
-      updateGradingTab(); // Added to initialize grading tab
-    } else {
-      document.getElementById("studentDashboard").classList.remove("hidden");
-      document.getElementById("studentUsername").textContent = users[username].name;
-      loadStudentView(username);
-      // Initialize last chat check time
-      lastChatCheck[username] = new Date().toISOString();
-    }
-  }
-
-  function addMilestone() {
-    const container = document.getElementById("milestonesContainer");
-    const milestoneId = Date.now(); // Unique ID
-    container.innerHTML += `
-      <div class="milestone" id="milestone-${milestoneId}" style="display: flex; gap: 12px; align-items: center; margin: 10px 0;">
-        <input type="text" placeholder="Milestone title" style="flex: 2;">
-        <input type="date" style="flex: 1;">
-        <button onclick="document.getElementById('milestone-${milestoneId}').remove()" class="danger" style="width: auto; padding: 10px;">Remove</button>
-      </div>
-    `;
-  }
-
-  function createGroup() {
-    let groupName = document.getElementById("groupName").value.trim();
-    let studentsInput = document.getElementById("studentList").value.trim();
-    let projectTitle = document.getElementById("projectTitle").value.trim();
-    let projectDesc = document.getElementById("projectDesc").value.trim();
-    let projectDeadline = document.getElementById("projectDeadline").value;
-    
-    // Validate inputs
-    if (!groupName || !studentsInput || !projectTitle) {
-      showAlert("teacher", "Please fill all required fields", "error");
-      return;
-    }
-    
-    let students = studentsInput.split(",").map(s => s.trim());
-    
-    // Validate student usernames
-    let invalidStudents = students.filter(s => !users[s] || users[s].role !== "student");
-    if (invalidStudents.length > 0) {
-      showAlert("teacher", `Invalid student usernames: ${invalidStudents.join(", ")}`, "error");
-      return;
-    }
-    
-    // Check if group name already exists
-    if (groups.some(g => g.name === groupName)) {
-      showAlert("teacher", "Group name already exists", "error");
-      return;
-    }
-
-    // Collect milestones
-    const milestones = [];
-    const milestoneElements = document.querySelectorAll('.milestone');
-    milestoneElements.forEach(el => {
-      const title = el.querySelector('input[type="text"]').value.trim();
-      const deadline = el.querySelector('input[type="date"]').value;
-      if (title && deadline) {
-        milestones.push({ title, deadline, completed: false });
-      }
-    });
-
-    let group = { 
-      name: groupName, 
-      students, 
-      project: { 
-        title: projectTitle, 
-        desc: projectDesc,
-        deadline: projectDeadline,
-        milestones 
-      }, 
-      reports: [], 
-      chat: [],
-      files: [],
-      notifications: [`Group "${groupName}" was created with project "${projectTitle}"`],
-      grades: {} // Initialize empty grades object
-    };
-    
-    groups.push(group);
-    localStorage.setItem("groups", JSON.stringify(groups));
-
-    // Clear form
-    document.getElementById("groupName").value = "";
-    document.getElementById("studentList").value = "";
-    document.getElementById("projectTitle").value = "";
-    document.getElementById("projectDesc").value = "";
-    document.getElementById("projectDeadline").value = "";
-    document.getElementById("milestonesContainer").innerHTML = "";
-    
-    showAlert("teacher", "Group Created & Project Assigned!", "success");
-    updateGroupsList();
-    updateGradingTab(); // Update grading tab with new group
-  }
-
-  function updateGroupsList() {
-    let list = document.getElementById("groupsList");
-    list.innerHTML = "";
-    
-    if (groups.length === 0) {
-      list.innerHTML = "<p>No groups created yet.</p>";
-      return;
-    }
-    
-    groups.forEach((group, index) => {
-      // Check if project is nearing deadline (within 7 days)
-      const today = new Date();
-      const deadline = new Date(group.project.deadline);
-      const daysUntilDeadline = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
-      const isDeadlineNear = daysUntilDeadline <= 7 && daysUntilDeadline >= 0;
-      
-      list.innerHTML += `
-        <div class="card group-card">
-          <b>${group.name}</b> ${isDeadlineNear ? '<span style="color: #dc3545;">(Deadline approaching!)</span>' : ''}<br>
-          <p><strong>Students:</strong> ${group.students.join(", ")}</p>
-          <p><strong>Project:</strong> ${group.project.title} - ${group.project.desc}</p>
-          <p><strong>Deadline:</strong> ${formatDate(group.project.deadline)} (${daysUntilDeadline} days left)</p>
-          ${group.project.milestones && group.project.milestones.length > 0 ? `
-            <p><strong>Milestones:</strong></p>
-            <ul>${group.project.milestones.map(m => `
-              <li>${m.title} - ${formatDate(m.deadline)} ${m.completed ? '✅' : '⏳'}</li>
-            `).join("")}</ul>
-          ` : ''}
-          ${group.reports.length > 0 ? `
-            <p><strong>Recent Reports:</strong></p>
-            <ul>${group.reports.slice(-3).map(r => `
-              <li>${r.student}: ${r.text} <span class="timestamp">${formatDate(r.timestamp)}</span></li>
-            `).join("")}</ul>
-          ` : "<p>No progress reports yet.</p>"}
-          <div class="group-buttons">
-            <button onclick="editGroup(${index})" class="secondary">Edit Group</button>
-            <button onclick="deleteGroup(${index})" class="danger">Delete Group</button>
-          </div>
+    <!-- Login Page -->
+    <div id="loginPage" class="container login-container">
+        <div class="card">
+            <h2>Login</h2>
+            <div style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; font-size: 14px;">
+                <strong>Test Accounts:</strong><br>
+                • Teacher: username <code>teacher</code>, password <code>admin</code><br>
+                • Student: username <code>student1</code>, password <code>pass1</code><br>
+                • Student: username <code>student2</code>, password <code>pass2</code>
+            </div>
+            <input type="text" id="username" placeholder="Username" value="teacher">
+            <input type="password" id="password" placeholder="Password" value="admin">
+            <button onclick="login()">Login</button>
+            <p id="errorMsg" class="error"></p>
         </div>
-      `;
-    });
-  }
+    </div>
 
-  function editGroup(index) {
-    let group = groups[index];
-    document.getElementById("groupName").value = group.name;
-    document.getElementById("studentList").value = group.students.join(", ");
-    document.getElementById("projectTitle").value = group.project.title;
-    document.getElementById("projectDesc").value = group.project.desc;
-    document.getElementById("projectDeadline").value = group.project.deadline;
-    
-    // Add milestones to form
-    const milestonesContainer = document.getElementById("milestonesContainer");
-    milestonesContainer.innerHTML = "";
-    if (group.project.milestones && group.project.milestones.length > 0) {
-      group.project.milestones.forEach(milestone => {
-        const milestoneId = Date.now();
-        milestonesContainer.innerHTML += `
-          <div class="milestone" id="milestone-${milestoneId}" style="display: flex; gap: 12px; align-items: center; margin: 10px 0;">
-            <input type="text" placeholder="Milestone title" value="${milestone.title}" style="flex: 2;">
-            <input type="date" value="${milestone.deadline}" style="flex: 1;">
-            <button onclick="document.getElementById('milestone-${milestoneId}').remove()" class="danger" style="width: auto; padding: 10px;">Remove</button>
-          </div>
-        `;
-      });
-    }
-    
-    // Switch to create group tab
-    switchTab(null, 'createGroupTab');
-    
-    // Remove the group from the list (will be re-added with updated info)
-    groups.splice(index, 1);
-    localStorage.setItem("groups", JSON.stringify(groups));
-    updateGroupsList();
-    
-    showAlert("teacher", "You can now edit the group details", "success");
-  }
-
-  function deleteGroup(index) {
-    if (confirm(`Are you sure you want to delete the group "${groups[index].name}"?`)) {
-      groups.splice(index, 1);
-      localStorage.setItem("groups", JSON.stringify(groups));
-      updateGroupsList();
-      updateGradingTab(); // Update grading tab after deletion
-      showAlert("teacher", "Group deleted successfully", "success");
-    }
-  }
-
-  // NEW FUNCTION: Update grading tab with groups and grading interface
-  function updateGradingTab() {
-    const container = document.getElementById("gradingContainer");
-    container.innerHTML = "";
-    
-    if (groups.length === 0) {
-      container.innerHTML = "<p>No groups created yet.</p>";
-      return;
-    }
-    
-    groups.forEach((group, groupIndex) => {
-      const groupCard = document.createElement("div");
-      groupCard.className = "card";
-      groupCard.innerHTML = `
-        <h3>Grade: ${group.name}</h3>
-        <p><strong>Project:</strong> ${group.project.title}</p>
-        <p><strong>Students:</strong> ${group.students.join(", ")}</p>
-        
-        <table class="grade-table">
-          <thead>
-            <tr>
-              <th>Student</th>
-              <th>Grade (0-100)</th>
-              <th>Letter Grade</th>
-              <th>Feedback</th>
-            </tr>
-          </thead>
-          <tbody id="gradeTable-${groupIndex}">
-          </tbody>
-        </table>
-        
-        <div class="grade-summary">
-          <h4>Group Summary</h4>
-          <div id="groupSummary-${groupIndex}">No grades entered yet</div>
+    <!-- Teacher Dashboard -->
+    <div id="teacherDashboard" class="container hidden">
+        <div class="user-info">
+            Teacher: <span id="teacherName">Dinesh Kumar</span>
+            <button onclick="logout()" class="secondary" style="padding: 6px 12px; font-size: 0.85em; margin-left: 10px;">Logout</button>
         </div>
         
-        <button onclick="saveGrades(${groupIndex})" style="margin-top: 15px;">Save Grades</button>
-      `;
-      
-      container.appendChild(groupCard);
-      
-      // Fill in the grade table
-      const tableBody = document.getElementById(`gradeTable-${groupIndex}`);
-      group.students.forEach((student, studentIndex) => {
-        const grade = group.grades && group.grades[student] ? group.grades[student].grade : "";
-        const feedback = group.grades && group.grades[student] ? group.grades[student].feedback : "";
-        const letterGrade = calculateLetterGrade(grade);
+        <h2>Teacher Dashboard</h2>
         
-        tableBody.innerHTML += `
-          <tr>
-            <td>${student}</td>
-            <td>
-              <input type="number" min="0" max="100" class="grade-input" 
-                     id="grade-${groupIndex}-${studentIndex}" 
-                     value="${grade}" 
-                     onchange="updateLetterGrade(${groupIndex}, ${studentIndex})">
-            </td>
-            <td id="letterGrade-${groupIndex}-${studentIndex}">
-              ${letterGrade ? `<span class="grade-badge grade-${letterGrade}">${letterGrade}</span>` : ""}
-            </td>
-            <td>
-              <input type="text" 
-                     id="feedback-${groupIndex}-${studentIndex}" 
-                     value="${feedback}" 
-                     placeholder="Optional feedback">
-            </td>
-          </tr>
-        `;
-      });
-      
-      updateGroupSummary(groupIndex);
-    });
-  }
-  
-  // NEW FUNCTION: Calculate letter grade based on numerical grade
-  function calculateLetterGrade(grade) {
-    if (!grade || isNaN(grade)) return "";
-    if (grade >= 90) return "A";
-    if (grade >= 80) return "B";
-    if (grade >= 70) return "C";
-    if (grade >= 60) return "D";
-    return "F";
-  }
-  
-  // NEW FUNCTION: Update letter grade display when numerical grade changes
-  function updateLetterGrade(groupIndex, studentIndex) {
-    const gradeInput = document.getElementById(`grade-${groupIndex}-${studentIndex}`);
-    const letterGradeCell = document.getElementById(`letterGrade-${groupIndex}-${studentIndex}`);
-    const grade = parseInt(gradeInput.value);
-    
-    if (!isNaN(grade) && grade >= 0 && grade <= 100) {
-      const letterGrade = calculateLetterGrade(grade);
-      letterGradeCell.innerHTML = `<span class="grade-badge grade-${letterGrade}">${letterGrade}</span>`;
-    } else {
-      letterGradeCell.innerHTML = "";
-    }
-    
-    updateGroupSummary(groupIndex);
-  }
-  
-  // NEW FUNCTION: Update group summary statistics
-  function updateGroupSummary(groupIndex) {
-    const group = groups[groupIndex];
-    const summaryElement = document.getElementById(`groupSummary-${groupIndex}`);
-    const grades = [];
-    
-    group.students.forEach((student, studentIndex) => {
-      const gradeInput = document.getElementById(`grade-${groupIndex}-${studentIndex}`);
-      const grade = parseInt(gradeInput.value);
-      
-      if (!isNaN(grade) && grade >= 0 && grade <= 100) {
-        grades.push(grade);
-      }
-    });
-    
-    if (grades.length === 0) {
-      summaryElement.innerHTML = "No grades entered yet";
-      return;
-    }
-    
-    const average = grades.reduce((a, b) => a + b, 0) / grades.length;
-    const min = Math.min(...grades);
-    const max = Math.max(...grades);
-    
-    summaryElement.innerHTML = `
-      <p><strong>Average:</strong> ${average.toFixed(1)}% (${calculateLetterGrade(average)})</p>
-      <p><strong>Range:</strong> ${min}% - ${max}%</p>
-      <p><strong>Graded:</strong> ${grades.length} of ${group.students.length} students</p>
-    `;
-  }
-  
-  // NEW FUNCTION: Save grades for a group
-  function saveGrades(groupIndex) {
-    const group = groups[groupIndex];
-    
-    group.students.forEach((student, studentIndex) => {
-      const gradeInput = document.getElementById(`grade-${groupIndex}-${studentIndex}`);
-      const feedbackInput = document.getElementById(`feedback-${groupIndex}-${studentIndex}`);
-      const grade = parseInt(gradeInput.value);
-      
-      if (!group.grades) {
-        group.grades = {};
-      }
-      
-      if (!isNaN(grade) && grade >= 0 && grade <= 100) {
-        group.grades[student] = {
-          grade: grade,
-          feedback: feedbackInput.value,
-          timestamp: new Date().toISOString()
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('teacher', 'groups')">Groups</div>
+            <div class="tab" onclick="switchTab('teacher', 'grading')">Grading</div>
+            <div class="tab" onclick="switchTab('teacher', 'submissions')">Submissions</div>
+            <div class="tab" onclick="switchTab('teacher', 'profile')">Profile</div>
+        </div>
+        
+        <div id="teacherGroupsTab" class="tab-content active">
+            <h3>Create New Group</h3>
+            <input type="text" id="groupName" placeholder="Group Name">
+            <input type="text" id="studentList" placeholder="Students (comma separated)">
+            <input type="text" id="projectTitle" placeholder="Project Title">
+            <textarea id="projectDescription" placeholder="Project Description" rows="4"></textarea>
+            <input type="date" id="projectDeadline">
+            <button onclick="createGroup()">Create Group</button>
+            
+            <h3 style="margin-top: 30px;">Manage Groups</h3>
+            <div id="groupsList"></div>
+        </div>
+        
+        <div id="teacherGradingTab" class="tab-content hidden">
+            <h3>Grading</h3>
+            <div id="gradingContainer"></div>
+        </div>
+        
+        <div id="teacherSubmissionsTab" class="tab-content hidden">
+            <h3>Project Submissions</h3>
+            <div id="submissionsContainer"></div>
+        </div>
+        
+        <div id="teacherProfileTab" class="tab-content hidden">
+            <h3>Teacher Profile</h3>
+            <div class="profile-details">
+                <p><strong>Username:</strong> <span id="profileUsername">teacher</span></p>
+                <p><strong>Display Name:</strong> <span id="profileDisplayName">Dinesh Kumar</span></p>
+                <p><strong>Email:</strong> <span id="profileEmail">dinesh.kumar@example.com</span></p>
+                <p><strong>Department:</strong> <span id="profileDepartment">Computer Science</span></p>
+            </div>
+            
+            <h4 style="margin-top: 30px;">Edit Profile</h4>
+            <div class="profile-form">
+                <input type="text" id="editDisplayName" placeholder="Display Name">
+                <input type="email" id="editEmail" placeholder="Email Address">
+                <input type="text" id="editDepartment" placeholder="Department">
+                <button onclick="updateTeacherProfile()">Update Profile</button>
+                <p id="profileUpdateMsg" class="success" style="display: none;"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="studentDashboard" class="container hidden">
+        <div class="user-info">
+            Student: <span id="studentName">Student</span>
+            <button onclick="logout()" class="secondary" style="padding: 6px 12px; font-size: 0.85em; margin-left: 10px;">Logout</button>
+        </div>
+        
+        <h2>Student Dashboard</h2>
+        
+        <div class="project-selector">
+            <label for="projectSelect"><strong>Select Project:</strong></label>
+            <select id="projectSelect" onchange="switchStudentProject()">
+                <option value="">-- Select a project --</option>
+            </select>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('student', 'project')">Project Details</div>
+            <div class="tab" onclick="switchTab('student', 'progress')">Progress</div>
+            <div class="tab" onclick="switchTab('student', 'chat')">Chat</div>
+            <div class="tab" onclick="switchTab('student', 'files')">Shared Files</div>
+            <div class="tab" onclick="switchTab('student', 'submit')">Submit Project</div>
+        </div>
+        
+        <div id="studentProjectTab" class="tab-content active">
+            <h3>Assigned Project</h3>
+            <div id="projectDetails"></div>
+        </div>
+        
+        <div id="studentProgressTab" class="tab-content hidden">
+            <h3>Progress Reports</h3>
+            <textarea id="progressReport" placeholder="Describe your progress..." rows="4"></textarea>
+            <button onclick="submitReport()">Submit Progress Report</button>
+            
+            <h4 style="margin-top: 20px;">Recent Reports</h4>
+            <div id="progressList"></div>
+        </div>
+        
+        <div id="studentChatTab" class="tab-content hidden">
+            <h3>Group Chat</h3>
+            <div id="chatBox" class="chat-box"></div>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="chatMessage" placeholder="Type your message..." style="flex: 1;">
+                <button onclick="sendMessage()" style="width: auto;">Send</button>
+            </div>
+        </div>
+        
+        <div id="studentFilesTab" class="tab-content hidden">
+            <h3>Shared Files</h3>
+            <p>Upload files to share with your group members. All group members can view and download these files.</p>
+            
+            <div class="file-upload">
+                <input type="file" id="sharedFileInput" multiple>
+                <p style="font-size: 0.9em; color: #666; margin-top: 10px;">Select files to share with your group</p>
+                <button onclick="uploadSharedFile()" class="info" style="width: auto; margin-top: 10px;">Upload File</button>
+            </div>
+            
+            <div class="shared-files-container">
+                <h4>Shared Files</h4>
+                <div id="sharedFilesList"></div>
+            </div>
+        </div>
+        
+        <div id="studentSubmitTab" class="tab-content hidden">
+            <h3>Submit Project</h3>
+            
+            <div class="submission-instructions">
+                <h4>Submission Guidelines</h4>
+                <ul>
+                    <li>Make sure all required files are included in your submission</li>
+                    <li>Check that your files are in the correct format (PDF, DOC, PPT, ZIP, etc.)</li>
+                    <li>Ensure your files are properly named with your project title</li>
+                    <li>Verify that all team members have reviewed the final submission</li>
+                </ul>
+            </div>
+            
+            <div class="submission-checklist">
+                <h4>Pre-Submission Checklist</h4>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check1">
+                    <label for="check1">I have reviewed all project requirements</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check2">
+                    <label for="check2">All necessary files are included</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check3">
+                    <label for="check3">Files are properly named and organized</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check4">
+                    <label for="check4">I have tested the submission files</label>
+                </div>
+            </div>
+            
+            <div id="projectSubmission">
+                <h4>Upload Project Files</h4>
+                <p>Select all files related to your project submission. You can upload multiple files at once.</p>
+                
+                <div class="file-upload" id="dropZone">
+                    <input type="file" id="projectFiles" multiple style="display: none;">
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 48px; color: #4CAF50; margin-bottom: 10px;">📁</div>
+                        <p style="font-size: 1.1em; margin-bottom: 10px;"><strong>Drag & Drop Files Here</strong></p>
+                        <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">or click to browse files</p>
+                        <button type="button" onclick="document.getElementById('projectFiles').click()" class="info" style="width: auto;">Browse Files</button>
+                    </div>
+                    <p style="font-size: 0.85em; color: #666; text-align: center; margin-top: 10px;">
+                        Supported formats: PDF, DOC, DOCX, PPT, PPTX, ZIP, RAR, images, and code files
+                    </p>
+                </div>
+                
+                <div class="upload-progress" id="uploadProgress">
+                    <div class="upload-progress-bar" id="uploadProgressBar"></div>
+                </div>
+                
+                <div class="uploaded-files" id="uploadedFilesList">
+                    <h4>Selected Files</h4>
+                    <div id="fileList"></div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button onclick="submitProject()" style="background: #2196F3; width: 100%; padding: 15px; font-size: 1.1em;">
+                        Submit Project for Review
+                    </button>
+                </div>
+            </div>
+            
+            <div id="submissionStatus" class="hidden">
+                <div class="success" style="padding: 20px;">
+                    <h4 style="font-size: 1.5em; margin-bottom: 15px;">✅ Project Submitted Successfully!</h4>
+                    <p>Your project has been submitted to the teacher for review.</p>
+                    <p><strong>Submission Details:</strong></p>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>Submitted on: <span id="submissionDate"></span></li>
+                        <li>Number of files: <span id="submissionFileCount"></span></li>
+                        <li>Status: <span class="pending-badge">Pending Review</span></li>
+                    </ul>
+                    <p style="margin-top: 15px;">You will be notified when your project has been graded.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Preview Modal -->
+    <div id="filePreviewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeFilePreview()">&times;</span>
+            <h3 id="previewFileName">File Preview</h3>
+            <div id="filePreviewContent">
+                <img id="imagePreview" class="file-preview" alt="Image Preview">
+                <iframe id="pdfPreview" class="file-preview" style="width: 100%; height: 500px;"></iframe>
+                <div id="textPreview" class="file-preview" style="padding: 15px; overflow: auto;"></div>
+                <div id="unsupportedPreview" class="file-preview" style="padding: 15px;">
+                    <p>This file type cannot be previewed directly. Please download the file to view it.</p>
+                </div>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <button onclick="downloadCurrentFile()" style="width: auto; margin-right: 10px;">Download File</button>
+                <button onclick="closeFilePreview()" class="secondary" style="width: auto;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data with multiple projects for students
+        let groups = JSON.parse(localStorage.getItem("groups")) || [
+            {
+                id: 1,
+                name: "Web Development Team",
+                students: ["student1", "student2"],
+                project: {
+                    title: "E-commerce Website",
+                    desc: "Build a full-stack e-commerce platform with user authentication, product catalog, shopping cart, and payment integration.",
+                    deadline: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0],
+                    requirements: "Must include: User registration/login, Product catalog with search, Shopping cart, Checkout process, Payment integration (simulated), Admin panel for product management"
+                },
+                reports: [
+                    { student: "student1", text: "Worked on the login page design", timestamp: new Date(Date.now() - 86400000).toISOString() },
+                    { student: "student2", text: "Set up the database schema", timestamp: new Date(Date.now() - 172800000).toISOString() }
+                ],
+                chat: [
+                    { sender: "student1", text: "Hi everyone! How's the project going?", timestamp: new Date(Date.now() - 3600000).toISOString() },
+                    { sender: "student2", text: "Going well! I just finished the database setup.", timestamp: new Date(Date.now() - 1800000).toISOString() }
+                ],
+                sharedFiles: [
+                    {
+                        name: "Project Plan.docx",
+                        size: 24576,
+                        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        data: "data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,UEsDBBQAAAAIA...",
+                        uploadedBy: "student1",
+                        uploadedAt: new Date(Date.now() - 86400000).toISOString()
+                    }
+                ],
+                submissions: [],
+                grades: {},
+                status: "active"
+            },
+            {
+                id: 2,
+                name: "Mobile App Team",
+                students: ["student1", "student2"],
+                project: {
+                    title: "Task Management App",
+                    desc: "Develop a cross-platform mobile application for task management with offline capabilities and cloud synchronization.",
+                    deadline: new Date(Date.now() + 45 * 86400000).toISOString().split('T')[0],
+                    requirements: "Must include: Task creation/editing, Categories and priorities, Due date reminders, Offline functionality, Cloud sync, User authentication"
+                },
+                reports: [],
+                chat: [],
+                sharedFiles: [],
+                submissions: [],
+                grades: {},
+                status: "active"
+            },
+            {
+                id: 3,
+                name: "Data Analysis Team",
+                students: ["student1"],
+                project: {
+                    title: "Sales Data Analysis",
+                    desc: "Analyze sales data to identify trends and provide actionable insights for business improvement.",
+                    deadline: new Date(Date.now() - 10 * 86400000).toISOString().split('T')[0], // Past deadline
+                    requirements: "Must include: Data cleaning and preprocessing, Statistical analysis, Visualization dashboard, Trend identification, Predictive modeling"
+                },
+                reports: [
+                    { student: "student1", text: "Completed data cleaning and preprocessing", timestamp: new Date(Date.now() - 15 * 86400000).toISOString() }
+                ],
+                chat: [],
+                sharedFiles: [],
+                submissions: [
+                    {
+                        submittedBy: "student1",
+                        submittedAt: new Date(Date.now() - 12 * 86400000).toISOString(),
+                        status: 'graded',
+                        files: [
+                            {
+                                name: "Analysis Report.pdf",
+                                size: 153600,
+                                type: "application/pdf",
+                                data: "data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFI..."
+                            }
+                        ]
+                    }
+                ],
+                grades: {
+                    "student1": {
+                        grade: 85,
+                        feedback: "Good analysis but could use more visualizations",
+                        timestamp: new Date(Date.now() - 10 * 86400000).toISOString()
+                    }
+                },
+                status: "completed"
+            }
+        ];
+
+        // Teacher profile data
+        let teacherProfile = JSON.parse(localStorage.getItem("teacherProfile")) || {
+            username: "teacher",
+            displayName: "Dinesh Kumar",
+            email: "dinesh.kumar@example.com",
+            department: "Computer Science"
         };
-      } else if (gradeInput.value === "") {
-        // Clear grade if input is empty
-        if (group.grades[student]) {
-          delete group.grades[student];
-        }
-      }
-    });
-    
-    localStorage.setItem("groups", JSON.stringify(groups));
-    showAlert("teacher", "Grades saved successfully!", "success");
-    updateGroupSummary(groupIndex);
-    
-    // Add notification
-    group.notifications.push(`Grades updated for ${group.name}`);
-    
-    // Update student views if they're logged in
-    updateStudentGradeDisplays();
-  }
-  
-  // NEW FUNCTION: Update grade displays for students
-  function updateStudentGradeDisplays() {
-    const currentUser = localStorage.getItem("loggedInUser");
-    const role = localStorage.getItem("role");
-    
-    if (role === "student") {
-      loadStudentView(currentUser);
-    }
-  }
 
-  function loadStudentView(username) {
-    let group = groups.find(g => g.students.includes(username));
-    if (group) {
-      document.getElementById("studentGroup").innerText = `Group: ${group.name}`;
-      document.getElementById("studentProject").innerHTML = `<b>${group.project.title}</b><br>${group.project.desc}`;
-      
-      // Show deadline information
-      const today = new Date();
-      const deadline = new Date(group.project.deadline);
-      const daysUntilDeadline = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
-      
-      let deadlineClass = "deadline";
-      if (daysUntilDeadline <= 7 && daysUntilDeadline >= 0) {
-        deadlineClass += " urgent";
-      }
-      
-      document.getElementById("studentDeadline").innerHTML = `
-        <div class="${deadlineClass}">
-          <strong>Project Deadline:</strong> ${formatDate(group.project.deadline)} 
-          (${daysUntilDeadline > 0 ? `${daysUntilDeadline} days left` : 'Deadline passed!'})
-        </div>
-      `;
-      
-      // NEW: Display grade if available
-      const gradeDisplay = document.getElementById("gradeDisplay");
-      const studentGradeSection = document.getElementById("studentGrade");
-      
-      if (group.grades && group.grades[username]) {
-        const gradeData = group.grades[username];
-        const letterGrade = calculateLetterGrade(gradeData.grade);
+        // Current file being previewed and selected project
+        let currentPreviewFile = null;
+        let currentStudentProjectId = null;
+        let selectedFiles = [];
+
+        // Save groups to localStorage
+        function saveGroups() {
+            localStorage.setItem("groups", JSON.stringify(groups));
+        }
+
+        // Save teacher profile to localStorage
+        function saveTeacherProfile() {
+            localStorage.setItem("teacherProfile", JSON.stringify(teacherProfile));
+        }
+
+        // Login function
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const errorMsg = document.getElementById("errorMsg");
+
+            // Simple authentication
+            if ((username === "teacher" && password === "admin") || 
+                (username === "student1" && password === "pass1") ||
+                (username === "student2" && password === "pass2")) {
+                
+                localStorage.setItem("loggedInUser", username);
+                localStorage.setItem("role", username === "teacher" ? "teacher" : "student");
+                
+                errorMsg.textContent = "";
+                showDashboard(username);
+                
+            } else {
+                errorMsg.textContent = "Invalid credentials! Use teacher/admin, student1/pass1, or student2/pass2";
+            }
+        }
+
+        // Show appropriate dashboard
+        function showDashboard(username) {
+            const role = localStorage.getItem("role");
+            
+            document.getElementById("loginPage").classList.add("hidden");
+            
+            if (role === "teacher") {
+                document.getElementById("teacherDashboard").classList.remove("hidden");
+                document.getElementById("teacherName").textContent = teacherProfile.displayName;
+                updateGroupsList();
+                updateGradingTab();
+                updateSubmissionsTab();
+                updateTeacherProfileTab();
+            } else {
+                document.getElementById("studentDashboard").classList.remove("hidden");
+                document.getElementById("studentName").textContent = username === "student1" ? "Alice Johnson" : 
+                                                                     username === "student2" ? "Bob Smith" : "Student";
+                loadStudentView(username);
+            }
+        }
+
+        // Update teacher profile tab with current data
+        function updateTeacherProfileTab() {
+            document.getElementById("profileUsername").textContent = teacherProfile.username;
+            document.getElementById("profileDisplayName").textContent = teacherProfile.displayName;
+            document.getElementById("profileEmail").textContent = teacherProfile.email;
+            document.getElementById("profileDepartment").textContent = teacherProfile.department;
+            
+            // Pre-fill edit form
+            document.getElementById("editDisplayName").value = teacherProfile.displayName;
+            document.getElementById("editEmail").value = teacherProfile.email;
+            document.getElementById("editDepartment").value = teacherProfile.department;
+        }
+
+        // Update teacher profile
+        function updateTeacherProfile() {
+            const newDisplayName = document.getElementById("editDisplayName").value.trim();
+            const newEmail = document.getElementById("editEmail").value.trim();
+            const newDepartment = document.getElementById("editDepartment").value.trim();
+            const profileUpdateMsg = document.getElementById("profileUpdateMsg");
+            
+            if (!newDisplayName) {
+                alert("Display name cannot be empty!");
+                return;
+            }
+            
+            // Update profile data
+            teacherProfile.displayName = newDisplayName;
+            teacherProfile.email = newEmail;
+            teacherProfile.department = newDepartment;
+            
+            // Save to localStorage
+            saveTeacherProfile();
+            
+            // Update UI
+            document.getElementById("teacherName").textContent = newDisplayName;
+            updateTeacherProfileTab();
+            
+            // Show success message
+            profileUpdateMsg.textContent = "Profile updated successfully!";
+            profileUpdateMsg.style.display = "block";
+            
+            // Hide message after 3 seconds
+            setTimeout(() => {
+                profileUpdateMsg.style.display = "none";
+            }, 3000);
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem("loggedInUser");
+            localStorage.removeItem("role");
+            location.reload();
+        }
+
+        // Tab switching
+        function switchTab(dashboard, tabName) {
+            // Hide all tabs
+            document.querySelectorAll(`#${dashboard}Dashboard .tab-content`).forEach(tab => {
+                tab.classList.add("hidden");
+                tab.classList.remove("active");
+            });
+            
+            document.querySelectorAll(`#${dashboard}Dashboard .tab`).forEach(tab => {
+                tab.classList.remove("active");
+            });
+            
+            // Show selected tab
+            document.getElementById(`${dashboard}${tabName.charAt(0).toUpperCase() + tabName.slice(1)}Tab`).classList.remove("hidden");
+            document.getElementById(`${dashboard}${tabName.charAt(0).toUpperCase() + tabName.slice(1)}Tab`).classList.add("active");
+            
+            // Activate tab button
+            event.target.classList.add("active");
+            
+            // Update content if needed
+            if (dashboard === 'teacher' && tabName === 'grading') {
+                updateGradingTab();
+            } else if (dashboard === 'teacher' && tabName === 'submissions') {
+                updateSubmissionsTab();
+            } else if (dashboard === 'teacher' && tabName === 'profile') {
+                updateTeacherProfileTab();
+            } else if (dashboard === 'student' && tabName === 'project') {
+                loadStudentProjectDetails();
+            } else if (dashboard === 'student' && tabName === 'files') {
+                updateSharedFilesList();
+            } else if (dashboard === 'student' && tabName === 'progress') {
+                updateProgressList();
+            } else if (dashboard === 'student' && tabName === 'chat') {
+                updateChat();
+            } else if (dashboard === 'student' && tabName === 'submit') {
+                updateSubmitTab();
+            }
+        }
+
+        // Student project switching
+        function switchStudentProject() {
+            const projectSelect = document.getElementById("projectSelect");
+            currentStudentProjectId = projectSelect.value ? parseInt(projectSelect.value) : null;
+            
+            // Update all student tabs for the selected project
+            loadStudentProjectDetails();
+            updateProgressList();
+            updateChat();
+            updateSharedFilesList();
+            updateSubmitTab();
+        }
+
+        // Teacher functions
+        function createGroup() {
+            const groupName = document.getElementById("groupName").value;
+            const students = document.getElementById("studentList").value;
+            const projectTitle = document.getElementById("projectTitle").value;
+            const projectDescription = document.getElementById("projectDescription").value;
+            const projectDeadline = document.getElementById("projectDeadline").value;
+            
+            if (!groupName || !students || !projectTitle) {
+                alert("Please fill all required fields");
+                return;
+            }
+            
+            const newGroup = {
+                id: Date.now(), // Unique ID for each group
+                name: groupName,
+                students: students.split(",").map(s => s.trim()),
+                project: {
+                    title: projectTitle,
+                    desc: projectDescription,
+                    deadline: projectDeadline,
+                    requirements: ""
+                },
+                reports: [],
+                chat: [],
+                sharedFiles: [],
+                submissions: [],
+                grades: {},
+                status: "active"
+            };
+            
+            groups.push(newGroup);
+            saveGroups();
+            updateGroupsList();
+            
+            // Clear form
+            document.getElementById("groupName").value = "";
+            document.getElementById("studentList").value = "";
+            document.getElementById("projectTitle").value = "";
+            document.getElementById("projectDescription").value = "";
+            document.getElementById("projectDeadline").value = "";
+            
+            alert("Group created successfully!");
+        }
+
+        function updateGroupsList() {
+            const groupsList = document.getElementById("groupsList");
+            groupsList.innerHTML = "";
+            
+            if (groups.length === 0) {
+                groupsList.innerHTML = "<p>No groups created yet.</p>";
+                return;
+            }
+            
+            groups.forEach((group, index) => {
+                const groupCard = document.createElement("div");
+                groupCard.className = `group-card ${group.status === 'completed' ? 'completed' : ''}`;
+                groupCard.innerHTML = `
+                    <h4>${group.name} ${group.status === 'completed' ? '<span class="completed-badge">Completed</span>' : ''}</h4>
+                    <p><strong>Students:</strong> ${group.students.join(", ")}</p>
+                    <p><strong>Project:</strong> ${group.project.title}</p>
+                    <p><strong>Description:</strong> ${group.project.desc}</p>
+                    <p><strong>Deadline:</strong> ${formatDate(group.project.deadline)}</p>
+                    <p><strong>Status:</strong> ${group.status}</p>
+                    <div class="group-buttons">
+                        <button class="secondary" onclick="editGroup(${index})">Edit</button>
+                        <button class="danger" onclick="deleteGroup(${index})">Delete</button>
+                        ${group.status === 'active' ? `<button class="warning" onclick="markGroupCompleted(${index})">Mark Completed</button>` : ''}
+                    </div>
+                `;
+                groupsList.appendChild(groupCard);
+            });
+        }
+
+        function markGroupCompleted(index) {
+            if (confirm(`Are you sure you want to mark the group "${groups[index].name}" as completed?`)) {
+                groups[index].status = "completed";
+                saveGroups();
+                updateGroupsList();
+                alert("Group marked as completed!");
+            }
+        }
+
+        function deleteGroup(index) {
+            if (confirm(`Are you sure you want to delete the group "${groups[index].name}"?`)) {
+                groups.splice(index, 1);
+                saveGroups();
+                updateGroupsList();
+            }
+        }
+
+        function editGroup(index) {
+            const group = groups[index];
+            document.getElementById("groupName").value = group.name;
+            document.getElementById("studentList").value = group.students.join(", ");
+            document.getElementById("projectTitle").value = group.project.title;
+            document.getElementById("projectDescription").value = group.project.desc;
+            document.getElementById("projectDeadline").value = group.project.deadline;
+            
+            // Remove the group from the list
+            groups.splice(index, 1);
+            saveGroups();
+            updateGroupsList();
+        }
+
+        function updateGradingTab() {
+            const gradingContainer = document.getElementById("gradingContainer");
+            gradingContainer.innerHTML = "";
+            
+            if (groups.length === 0) {
+                gradingContainer.innerHTML = "<p>No groups created yet.</p>";
+                return;
+            }
+            
+            groups.forEach((group, groupIndex) => {
+                const groupCard = document.createElement("div");
+                groupCard.className = "card";
+                groupCard.innerHTML = `
+                    <h3>Grade: ${group.name} ${group.status === 'completed' ? '<span class="completed-badge">Completed</span>' : ''}</h3>
+                    <p><strong>Project:</strong> ${group.project.title}</p>
+                    <p><strong>Students:</strong> ${group.students.join(", ")}</p>
+                    
+                    <table class="grade-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Grade (0-100)</th>
+                                <th>Letter Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gradeTable-${groupIndex}">
+                        </tbody>
+                    </table>
+                    
+                    <button onclick="saveGrades(${groupIndex})" style="margin-top: 15px;">Save Grades</button>
+                `;
+                
+                gradingContainer.appendChild(groupCard);
+                
+                // Fill in the grade table
+                const tableBody = document.getElementById(`gradeTable-${groupIndex}`);
+                group.students.forEach((student, studentIndex) => {
+                    const grade = group.grades && group.grades[student] ? group.grades[student].grade : "";
+                    const letterGrade = calculateLetterGrade(grade);
+                    
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${student}</td>
+                            <td>
+                                <input type="number" min="0" max="100" class="grade-input" 
+                                       id="grade-${groupIndex}-${studentIndex}" 
+                                       value="${grade}" 
+                                       onchange="updateLetterGrade(${groupIndex}, ${studentIndex})">
+                            </td>
+                            <td id="letterGrade-${groupIndex}-${studentIndex}">
+                                ${letterGrade ? `<span class="grade-badge grade-${letterGrade}">${letterGrade}</span>` : ""}
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+        }
+
+        function calculateLetterGrade(grade) {
+            if (!grade || isNaN(grade)) return "";
+            if (grade >= 90) return "A";
+            if (grade >= 80) return "B";
+            if (grade >= 70) return "C";
+            if (grade >= 60) return "D";
+            return "F";
+        }
+
+        function updateLetterGrade(groupIndex, studentIndex) {
+            const gradeInput = document.getElementById(`grade-${groupIndex}-${studentIndex}`);
+            const letterGradeCell = document.getElementById(`letterGrade-${groupIndex}-${studentIndex}`);
+            const grade = parseInt(gradeInput.value);
+            
+            if (!isNaN(grade) && grade >= 0 && grade <= 100) {
+                const letterGrade = calculateLetterGrade(grade);
+                letterGradeCell.innerHTML = `<span class="grade-badge grade-${letterGrade}">${letterGrade}</span>`;
+            } else {
+                letterGradeCell.innerHTML = "";
+            }
+        }
+
+        function saveGrades(groupIndex) {
+            const group = groups[groupIndex];
+            
+            group.students.forEach((student, studentIndex) => {
+                const gradeInput = document.getElementById(`grade-${groupIndex}-${studentIndex}`);
+                const grade = parseInt(gradeInput.value);
+                
+                if (!group.grades) {
+                    group.grades = {};
+                }
+                
+                if (!isNaN(grade) && grade >= 0 && grade <= 100) {
+                    group.grades[student] = {
+                        grade: grade,
+                        feedback: "",
+                        timestamp: new Date().toISOString()
+                    };
+                } else if (gradeInput.value === "") {
+                    // Clear grade if input is empty
+                    if (group.grades[student]) {
+                        delete group.grades[student];
+                    }
+                }
+            });
+            
+            saveGroups();
+            alert("Grades saved successfully!");
+        }
+
+        function updateSubmissionsTab() {
+            const submissionsContainer = document.getElementById("submissionsContainer");
+            submissionsContainer.innerHTML = "";
+            
+            const hasSubmissions = groups.some(group => group.submissions && group.submissions.length > 0);
+            
+            if (!hasSubmissions) {
+                submissionsContainer.innerHTML = "<p>No project submissions yet.</p>";
+                return;
+            }
+            
+            groups.forEach((group, groupIndex) => {
+                if (group.submissions && group.submissions.length > 0) {
+                    const groupCard = document.createElement("div");
+                    groupCard.className = "card";
+                    groupCard.innerHTML = `
+                        <h3>Submissions for ${group.name} ${group.status === 'completed' ? '<span class="completed-badge">Completed</span>' : ''}</h3>
+                    `;
+                    
+                    group.submissions.forEach((submission, subIndex) => {
+                        const submissionElement = document.createElement("div");
+                        submissionElement.className = "report";
+                        submissionElement.innerHTML = `
+                            <p><strong>Submitted by:</strong> ${submission.submittedBy}</p>
+                            <p><strong>Date:</strong> ${formatDate(submission.submittedAt)}</p>
+                            <p><strong>Status:</strong> 
+                                <span class="${submission.status === 'graded' ? 'submitted-badge' : 'pending-badge'}">
+                                    ${submission.status === 'graded' ? 'Graded' : 'Pending Review'}
+                                </span>
+                            </p>
+                            <h4 style="margin-top: 15px;">Submitted Files:</h4>
+                        `;
+                        
+                        // Add file list
+                        if (submission.files && submission.files.length > 0) {
+                            submission.files.forEach((file, fileIndex) => {
+                                const fileItem = document.createElement("div");
+                                fileItem.className = "file-item";
+                                fileItem.innerHTML = `
+                                    <div>
+                                        <span>${file.name}</span>
+                                        <span style="font-size: 0.85em; color: #666; margin-left: 10px;">(${formatFileSize(file.size)})</span>
+                                    </div>
+                                    <div class="file-actions">
+                                        <button onclick="previewFile('${file.data}', '${file.name}', '${file.type}')">View</button>
+                                        <button onclick="downloadFile('${file.data}', '${file.name}')" class="secondary">Download</button>
+                                    </div>
+                                `;
+                                submissionElement.appendChild(fileItem);
+                            });
+                        } else {
+                            submissionElement.innerHTML += `<p>No files submitted.</p>`;
+                        }
+                        
+                        groupCard.appendChild(submissionElement);
+                    });
+                    
+                    submissionsContainer.appendChild(groupCard);
+                }
+            });
+        }
+
+        // Student functions
+        function loadStudentView(username) {
+            // Get all projects for this student
+            const studentProjects = groups.filter(g => g.students.includes(username));
+            
+            if (studentProjects.length === 0) {
+                document.getElementById("studentProjectTab").innerHTML = "<p>You are not assigned to any projects yet.</p>";
+                return;
+            }
+            
+            // Update project selector
+            const projectSelect = document.getElementById("projectSelect");
+            projectSelect.innerHTML = '<option value="">-- Select a project --</option>';
+            
+            studentProjects.forEach(project => {
+                const option = document.createElement("option");
+                option.value = project.id;
+                option.textContent = `${project.project.title} (${project.name}) ${project.status === 'completed' ? '- Completed' : ''}`;
+                projectSelect.appendChild(option);
+            });
+            
+            // Select the first project by default
+            if (studentProjects.length > 0) {
+                currentStudentProjectId = studentProjects[0].id;
+                projectSelect.value = currentStudentProjectId;
+                
+                // Update all tabs for the selected project
+                loadStudentProjectDetails();
+                updateProgressList();
+                updateChat();
+                updateSharedFilesList();
+                updateSubmitTab();
+            }
+            
+            // Initialize file upload functionality
+            initializeFileUpload();
+        }
+
+        function getCurrentStudentProject() {
+            if (!currentStudentProjectId) return null;
+            return groups.find(g => g.id === currentStudentProjectId);
+        }
+
+        function loadStudentProjectDetails() {
+            const project = getCurrentStudentProject();
+            const projectDetails = document.getElementById("projectDetails");
+            
+            if (project) {
+                const isPastDeadline = new Date(project.project.deadline) < new Date();
+                const deadlineClass = isPastDeadline ? 'past' : '';
+                
+                projectDetails.innerHTML = `
+                    <div class="project-details">
+                        <div class="project-status">
+                            <h4>${project.project.title}</h4>
+                            ${project.status === 'completed' ? '<span class="completed-badge">Completed</span>' : ''}
+                        </div>
+                        <p><strong>Group:</strong> ${project.name}</p>
+                        <p><strong>Description:</strong> ${project.project.desc}</p>
+                        <p><strong>Requirements:</strong> ${project.project.requirements}</p>
+                        <p class="project-deadline ${deadlineClass}"><strong>Deadline:</strong> ${formatDate(project.project.deadline)} ${isPastDeadline ? '(Past Deadline)' : ''}</p>
+                        <p><strong>Group Members:</strong> ${project.students.join(", ")}</p>
+                        ${project.grades && project.grades[localStorage.getItem("loggedInUser")] ? `
+                            <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 5px;">
+                                <p><strong>Your Grade:</strong> ${project.grades[localStorage.getItem("loggedInUser")].grade}/100 
+                                <span class="grade-badge grade-${calculateLetterGrade(project.grades[localStorage.getItem("loggedInUser")].grade)}">${calculateLetterGrade(project.grades[localStorage.getItem("loggedInUser")].grade)}</span></p>
+                                <p><strong>Feedback:</strong> ${project.grades[localStorage.getItem("loggedInUser")].feedback}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            } else {
+                projectDetails.innerHTML = "<p>Please select a project from the dropdown above.</p>";
+            }
+        }
+
+        function submitReport() {
+            const username = localStorage.getItem("loggedInUser");
+            const reportText = document.getElementById("progressReport").value.trim();
+            const project = getCurrentStudentProject();
+            
+            if (!project) {
+                alert("Please select a project first!");
+                return;
+            }
+            
+            if (!reportText) {
+                alert("Please write your progress first!");
+                return;
+            }
+
+            if (project) {
+                project.reports.push({ 
+                    student: username, 
+                    text: reportText,
+                    timestamp: new Date().toISOString()
+                });
+                
+                saveGroups();
+                updateProgressList();
+                document.getElementById("progressReport").value = "";
+                alert("Progress Submitted!");
+            }
+        }
+
+        function updateProgressList() {
+            const project = getCurrentStudentProject();
+            const progressList = document.getElementById("progressList");
+            
+            if (!project) {
+                progressList.innerHTML = "<p>Please select a project first.</p>";
+                return;
+            }
+            
+            progressList.innerHTML = "";
+            
+            if (project.reports.length === 0) {
+                progressList.innerHTML = "<p>No progress reports yet.</p>";
+                return;
+            }
+            
+            // Show most recent first
+            project.reports.slice().reverse().forEach(report => {
+                const reportElement = document.createElement("div");
+                reportElement.className = "report";
+                reportElement.innerHTML = `
+                    <b>${report.student}</b>: ${report.text}
+                    <span class="timestamp">${formatDate(report.timestamp)}</span>
+                `;
+                progressList.appendChild(reportElement);
+            });
+        }
+
+        function sendMessage() {
+            const username = localStorage.getItem("loggedInUser");
+            const messageText = document.getElementById("chatMessage").value.trim();
+            const project = getCurrentStudentProject();
+            
+            if (!project) {
+                alert("Please select a project first!");
+                return;
+            }
+            
+            if (!messageText) {
+                alert("Message cannot be empty!");
+                return;
+            }
+
+            if (project) {
+                project.chat.push({ 
+                    sender: username, 
+                    text: messageText,
+                    timestamp: new Date().toISOString()
+                });
+                
+                saveGroups();
+                updateChat();
+                document.getElementById("chatMessage").value = "";
+            }
+        }
+
+        function updateChat() {
+            const project = getCurrentStudentProject();
+            const username = localStorage.getItem("loggedInUser");
+            const chatBox = document.getElementById("chatBox");
+            
+            if (!project) {
+                chatBox.innerHTML = "<p>Please select a project first.</p>";
+                return;
+            }
+            
+            chatBox.innerHTML = "";
+            
+            if (project.chat.length === 0) {
+                chatBox.innerHTML = "<p>No messages yet. Start the conversation!</p>";
+                return;
+            }
+            
+            project.chat.forEach(message => {
+                const messageElement = document.createElement("div");
+                messageElement.className = `message ${message.sender === username ? 'my-msg' : 'student-msg'}`;
+                messageElement.innerHTML = `
+                    <b>${message.sender}:</b> ${message.text}
+                    <span class="timestamp">${formatTime(message.timestamp)}</span>
+                `;
+                chatBox.appendChild(messageElement);
+            });
+            
+            // Scroll to bottom
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // File sharing functions
+        function uploadSharedFile() {
+            const username = localStorage.getItem("loggedInUser");
+            const fileInput = document.getElementById("sharedFileInput");
+            const project = getCurrentStudentProject();
+            
+            if (!project) {
+                alert("Please select a project first!");
+                return;
+            }
+            
+            if (fileInput.files.length === 0) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            if (project) {
+                if (!project.sharedFiles) {
+                    project.sharedFiles = [];
+                }
+                
+                // Read files and convert to base64
+                const files = Array.from(fileInput.files);
+                const filePromises = files.map(file => {
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            resolve({
+                                name: file.name,
+                                size: file.size,
+                                type: file.type,
+                                data: e.target.result,
+                                uploadedBy: username,
+                                uploadedAt: new Date().toISOString()
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                });
+                
+                Promise.all(filePromises).then(fileData => {
+                    project.sharedFiles.push(...fileData);
+                    saveGroups();
+                    updateSharedFilesList();
+                    fileInput.value = "";
+                    alert("File uploaded successfully!");
+                });
+            }
+        }
+
+        function updateSharedFilesList() {
+            const project = getCurrentStudentProject();
+            const sharedFilesList = document.getElementById("sharedFilesList");
+            
+            if (!project) {
+                sharedFilesList.innerHTML = "<p>Please select a project first.</p>";
+                return;
+            }
+            
+            sharedFilesList.innerHTML = "";
+            
+            if (!project.sharedFiles || project.sharedFiles.length === 0) {
+                sharedFilesList.innerHTML = '<div class="no-files">No shared files yet. Upload a file to get started!</div>';
+                return;
+            }
+            
+            // Show most recent first
+            project.sharedFiles.slice().reverse().forEach((file, index) => {
+                const fileItem = document.createElement("div");
+                fileItem.className = "shared-file-item";
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-meta">
+                            Uploaded by ${file.uploadedBy} on ${formatDate(file.uploadedAt)} • ${formatFileSize(file.size)}
+                        </div>
+                    </div>
+                    <div class="shared-file-actions">
+                        <button onclick="previewFile('${file.data}', '${file.name}', '${file.type}')">View</button>
+                        <button onclick="downloadFile('${file.data}', '${file.name}')" class="secondary">Download</button>
+                        ${file.uploadedBy === localStorage.getItem("loggedInUser") ? `<button onclick="deleteSharedFile(${project.sharedFiles.length - 1 - index})" class="danger">Delete</button>` : ''}
+                    </div>
+                `;
+                sharedFilesList.appendChild(fileItem);
+            });
+        }
+
+        function deleteSharedFile(index) {
+            const project = getCurrentStudentProject();
+            
+            if (project && project.sharedFiles && project.sharedFiles[index]) {
+                if (confirm(`Are you sure you want to delete "${project.sharedFiles[index].name}"?`)) {
+                    project.sharedFiles.splice(index, 1);
+                    saveGroups();
+                    updateSharedFilesList();
+                }
+            }
+        }
+
+        // Enhanced project submission functions
+        function initializeFileUpload() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('projectFiles');
+            
+            // Click to select files
+            dropZone.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            // Drag and drop functionality
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropZone.classList.add('drag-over');
+            }
+            
+            function unhighlight() {
+                dropZone.classList.remove('drag-over');
+            }
+            
+            // Handle dropped files
+            dropZone.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+            
+            // Handle selected files
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+        }
         
-        gradeDisplay.innerHTML = `
-          <div class="grade-summary">
-            <p><strong>Grade:</strong> ${gradeData.grade}% 
-              <span class="grade-badge grade-${letterGrade}">${letterGrade}</span>
-            </p>
-            ${gradeData.feedback ? `<p><strong>Feedback:</strong> ${gradeData.feedback}</p>` : ""}
-            <span class="timestamp">Graded on: ${formatDate(gradeData.timestamp)}</span>
-          </div>
-        `;
-        studentGradeSection.classList.remove("hidden");
-      } else {
-        studentGradeSection.classList.add("hidden");
-      }
-      
-      updateProgressList(group);
-      updateChat(group);
-      updateSharedFiles(group);
-      checkChatNotifications(username, group);
-      currentStudentGroup = group;
-    } else {
-      document.getElementById("studentGroup").innerText = "You are not assigned to any group yet.";
-      document.getElementById("studentGrade").classList.add("hidden");
-    }
-    
-    // Handle file input change
-    document.getElementById('fileUpload').addEventListener('change', handleFileSelect);
-  }
-
-  function handleFileSelect(event) {
-    const files = event.target.files;
-    const fileList = document.getElementById('fileList');
-    fileList.innerHTML = '';
-    uploadedFiles = {}; // Reset
-    
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      uploadedFiles[file.name] = file;
-      
-      const fileItem = document.createElement('div');
-      fileItem.className = 'file-item';
-      fileItem.innerHTML = `
-        <span>${file.name}</span>
-        <span>(${formatFileSize(file.size)})</span>
-      `;
-      fileList.appendChild(fileItem);
-    }
-  }
-
-  function formatFileSize(bytes) {
-    if (bytes < 1024) return bytes + ' bytes';
-    else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-    else return (bytes / 1048576).toFixed(1) + ' MB';
-  }
-
-  function submitReport() {
-    let username = localStorage.getItem("loggedInUser");
-    let reportText = document.getElementById("progressReport").value.trim();
-    
-    if (!reportText) {
-      showAlert("student", "Write your progress first!", "error");
-      return;
-    }
-
-    let group = groups.find(g => g.students.includes(username));
-    if (group) {
-      // Get file information
-      const fileNames = Object.keys(uploadedFiles);
-      
-      group.reports.push({ 
-        student: username, 
-        text: reportText,
-        timestamp: new Date().toISOString(),
-        files: fileNames
-      });
-      
-      // Add notification for teacher
-      group.notifications.push(`${username} submitted a progress report in ${group.name}`);
-      
-      localStorage.setItem("groups", JSON.stringify(groups));
-      showAlert("student", "Progress Submitted!", "success");
-      updateProgressList(group);
-      document.getElementById("progressReport").value = "";
-      document.getElementById("fileList").innerHTML = "";
-      document.getElementById("fileUpload").value = "";
-      uploadedFiles = {};
-      
-      // Update teacher notifications if teacher is logged in
-      if (localStorage.getItem("role") === "teacher") {
-        checkTeacherNotifications();
-      }
-    }
-  }
-
-  function updateProgressList(group) {
-    let list = document.getElementById("progressList");
-    
-    if (group.reports.length === 0) {
-      list.innerHTML = "<p>No progress reports yet.</p>";
-      return;
-    }
-    
-    list.innerHTML = group.reports.map(r => `
-      <div class="report">
-        <b>${r.student}</b>: ${r.text}
-        ${r.files && r.files.length > 0 ? `
-          <div><strong>Attachments:</strong> ${r.files.join(', ')}</div>
-        ` : ''}
-        <span class="timestamp">${formatDate(r.timestamp)}</span>
-      </div>
-    `).reverse().join("");
-  }
-
-  function sendMessage() {
-    let username = localStorage.getItem("loggedInUser");
-    let msg = document.getElementById("chatMessage").value.trim();
-    
-    if (!msg) {
-      showAlert("student", "Message cannot be empty!", "error");
-      return;
-    }
-
-    let group = groups.find(g => g.students.includes(username));
-    if (group) {
-      group.chat.push({ 
-        sender: username, 
-        text: msg,
-        timestamp: new Date().toISOString()
-      });
-      
-      // Notify other group members of new message
-      group.students.forEach(student => {
-        if (student !== username) {
-          if (!group.notifications) group.notifications = [];
-          group.notifications.push(`New message from ${username} in ${group.name}`);
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Check if file already exists
+                if (selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                    continue;
+                }
+                
+                selectedFiles.push({
+                    file: file,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type
+                });
+            }
+            
+            updateFileList();
         }
-      });
-      
-      localStorage.setItem("groups", JSON.stringify(groups));
-      updateChat(group);
-      document.getElementById("chatMessage").value = "";
-      
-      // Update notification badges for other group members if they're logged in
-      updateChatNotificationBadges(group);
-    }
-  }
-  
-  function clearChat() {
-    let username = localStorage.getItem("loggedInUser");
-    let group = groups.find(g => g.students.includes(username));
-    
-    if (group) {
-      if (confirm("Are you sure you want to clear the entire chat history?")) {
-        group.chat = [];
-        localStorage.setItem("groups", JSON.stringify(groups));
-        updateChat(group);
-        showAlert("student", "Chat cleared successfully", "success");
-      }
-    }
-  }
-  
-  function refreshChat() {
-    let username = localStorage.getItem("loggedInUser");
-    let group = groups.find(g => g.students.includes(username));
-    
-    if (group) {
-      updateChat(group);
-      // Reset notification badge
-      document.getElementById("chatNotificationBadge").classList.add("hidden");
-      lastChatCheck[username] = new Date().toISOString();
-      showAlert("student", "Chat refreshed", "success");
-    }
-  }
-  
-  function showAlert(dashboard, message, type) {
-    const alertElement = document.getElementById(`${dashboard}Alert`);
-    alertElement.innerHTML = `<div class="alert alert-${type === 'success' ? 'success' : 'error'}">${message}</div>`;
-    
-    // Auto-hide alert after 3 seconds
-    setTimeout(() => {
-      alertElement.innerHTML = "";
-    }, 3000);
-  }
-
-  function updateChat(group) {
-    let chatBox = document.getElementById("chatBox");
-    let currentUser = localStorage.getItem("loggedInUser");
-    
-    if (group.chat.length === 0) {
-      chatBox.innerHTML = "<p>No messages yet. Start the conversation!</p>";
-      return;
-    }
-    
-    chatBox.innerHTML = group.chat.map(m => `
-      <div class="message ${m.sender === currentUser ? 'my-msg' : 'student-msg'}">
-        <b>${m.sender}:</b> ${m.text}
-        <span class="timestamp">${formatTime(m.timestamp)}</span>
-      </div>
-    `).join("");
-    
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-  
-  function checkChatNotifications(username, group) {
-    if (!group || !group.chat || group.chat.length === 0) return;
-    
-    const lastMessageTime = group.chat[group.chat.length - 1].timestamp;
-    
-    if (!lastChatCheck[username] || new Date(lastMessageTime) > new Date(lastChatCheck[username])) {
-      document.getElementById("chatNotificationBadge").classList.remove("hidden");
-      document.getElementById("chatNotificationBadge").textContent = "!";
-    }
-  }
-  
-  function updateChatNotificationBadges(group) {
-    if (!group || !group.students) return;
-    
-    group.students.forEach(student => {
-      if (student !== localStorage.getItem("loggedInUser") && users[student]) {
-        // In a real application, you would send a notification to the user
-        // For this demo, we'll just update the UI if the user is currently logged in
-        if (localStorage.getItem("loggedInUser") === student) {
-          document.getElementById("chatNotificationBadge").classList.remove("hidden");
-          document.getElementById("chatNotificationBadge").textContent = "!";
+        
+        function updateFileList() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            if (selectedFiles.length === 0) {
+                fileList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No files selected</p>';
+                return;
+            }
+            
+            selectedFiles.forEach((fileObj, index) => {
+                const fileElement = document.createElement('div');
+                fileElement.className = 'uploaded-file';
+                fileElement.innerHTML = `
+                    <div>
+                        <strong>${fileObj.name}</strong>
+                        <span style="font-size: 0.85em; color: #666; margin-left: 10px;">(${formatFileSize(fileObj.size)})</span>
+                    </div>
+                    <button class="file-remove" onclick="removeFile(${index})">Remove</button>
+                `;
+                fileList.appendChild(fileElement);
+            });
         }
-      }
-    });
-  }
+        
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFileList();
+        }
+        
+        function updateSubmitTab() {
+            const project = getCurrentStudentProject();
+            const projectSubmission = document.getElementById("projectSubmission");
+            const submissionStatus = document.getElementById("submissionStatus");
+            
+            if (!project) {
+                projectSubmission.innerHTML = "<p>Please select a project first.</p>";
+                return;
+            }
+            
+            // Check if student has already submitted
+            const username = localStorage.getItem("loggedInUser");
+            const hasSubmitted = project.submissions && project.submissions.some(s => s.submittedBy === username);
+            
+            if (hasSubmitted || project.status === 'completed') {
+                projectSubmission.classList.add("hidden");
+                submissionStatus.classList.remove("hidden");
+                
+                // Update submission details
+                if (hasSubmitted) {
+                    const submission = project.submissions.find(s => s.submittedBy === username);
+                    document.getElementById('submissionDate').textContent = formatDate(submission.submittedAt);
+                    document.getElementById('submissionFileCount').textContent = submission.files ? submission.files.length : 0;
+                }
+                
+                if (project.status === 'completed') {
+                    submissionStatus.innerHTML = `
+                        <div class="success" style="padding: 20px;">
+                            <h4 style="font-size: 1.5em; margin-bottom: 15px;">✅ Project Completed!</h4>
+                            <p>This project has been marked as completed by your teacher.</p>
+                            ${project.grades && project.grades[username] ? `
+                                <p><strong>Your Grade:</strong> ${project.grades[username].grade}/100 
+                                <span class="grade-badge grade-${calculateLetterGrade(project.grades[username].grade)}">${calculateLetterGrade(project.grades[username].grade)}</span></p>
+                                <p><strong>Feedback:</strong> ${project.grades[username].feedback}</p>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+            } else {
+                projectSubmission.classList.remove("hidden");
+                submissionStatus.classList.add("hidden");
+            }
+        }
 
-  function formatDate(dateString) {
-    if (!dateString) return "No date set";
-    const date = new Date(dateString);
-    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-  }
-  
-  function formatTime(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-  }
-  
-  // FIXED: Tab switching function with proper event handling
-  function switchTab(event, tabId, dashboard = '') {
-    // For teacher dashboard
-    if (!dashboard) {
-      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-      
-      // Activate the clicked tab
-      if (event && event.target) {
-        event.target.classList.add('active');
-      }
-      document.getElementById(tabId).classList.add('active');
-      
-      // Special handling for certain tabs
-      if (tabId === 'gradingTab') {
-        updateGradingTab();
-      } else if (tabId === 'notificationsTab') {
-        document.getElementById("teacherNotificationBadge").classList.add("hidden");
-        updateTeacherNotifications();
-      }
-    } 
-    // For student dashboard
-    else {
-      document.querySelectorAll(`#${dashboard}Dashboard .tab`).forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll(`#${dashboard}Dashboard .tab-content`).forEach(content => content.classList.remove('active'));
-      
-      // Activate the clicked tab
-      if (event && event.target) {
-        event.target.classList.add('active');
-      }
-      document.getElementById(tabId).classList.add('active');
-      
-      // If switching to chat tab, clear notification badge
-      if (tabId === 'chatTab') {
-        document.getElementById("chatNotificationBadge").classList.add("hidden");
-        const username = localStorage.getItem("loggedInUser");
-        if (username) lastChatCheck[username] = new Date().toISOString();
-      }
-    }
-  }
+        function submitProject() {
+            const username = localStorage.getItem("loggedInUser");
+            const project = getCurrentStudentProject();
+            
+            if (!project) {
+                alert("Please select a project first!");
+                return;
+            }
+            
+            if (selectedFiles.length === 0) {
+                alert("Please select at least one file to submit.");
+                return;
+            }
+            
+            // Check if all checklist items are checked
+            const check1 = document.getElementById('check1').checked;
+            const check2 = document.getElementById('check2').checked;
+            const check3 = document.getElementById('check3').checked;
+            const check4 = document.getElementById('check4').checked;
+            
+            if (!check1 || !check2 || !check3 || !check4) {
+                alert("Please complete all items in the pre-submission checklist before submitting.");
+                return;
+            }
 
-  function checkTeacherNotifications() {
-    let notificationCount = 0;
-    groups.forEach(group => {
-      if (group.notifications && group.notifications.length > 0) {
-        notificationCount += group.notifications.length;
-      }
-    });
-    
-    if (notificationCount > 0) {
-      document.getElementById("teacherNotificationBadge").classList.remove("hidden");
-      document.getElementById("teacherNotificationBadge").textContent = notificationCount;
-    } else {
-      document.getElementById("teacherNotificationBadge").classList.add("hidden");
-    }
-  }
-  
-  function updateTeacherNotifications() {
-    const container = document.getElementById("teacherNotifications");
-    container.innerHTML = "";
-    
-    let allNotifications = [];
-    
-    groups.forEach(group => {
-      if (group.notifications && group.notifications.length > 0) {
-        group.notifications.forEach(notification => {
-          allNotifications.push({
-            text: notification,
-            group: group.name,
-            timestamp: new Date().toISOString() // In a real app, you'd store actual timestamps
-          });
+            if (confirm("Are you sure you want to submit your project? This cannot be undone.")) {
+                if (project) {
+                    if (!project.submissions) {
+                        project.submissions = [];
+                    }
+                    
+                    // Show upload progress
+                    const progressBar = document.getElementById('uploadProgressBar');
+                    const progressContainer = document.getElementById('uploadProgress');
+                    progressContainer.style.display = 'block';
+                    progressBar.style.width = '0%';
+                    
+                    // Simulate upload progress
+                    let progress = 0;
+                    const progressInterval = setInterval(() => {
+                        progress += 5;
+                        progressBar.style.width = progress + '%';
+                        
+                        if (progress >= 100) {
+                            clearInterval(progressInterval);
+                            
+                            // Read files and convert to base64
+                            const filePromises = selectedFiles.map(fileObj => {
+                                return new Promise((resolve) => {
+                                    const reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        resolve({
+                                            name: fileObj.name,
+                                            size: fileObj.size,
+                                            type: fileObj.type,
+                                            data: e.target.result
+                                        });
+                                    };
+                                    reader.readAsDataURL(fileObj.file);
+                                });
+                            });
+                            
+                            Promise.all(filePromises).then(fileData => {
+                                project.submissions.push({
+                                    submittedBy: username,
+                                    submittedAt: new Date().toISOString(),
+                                    status: 'pending',
+                                    files: fileData
+                                });
+                                
+                                saveGroups();
+                                updateSubmitTab();
+                                
+                                // Reset form
+                                selectedFiles = [];
+                                updateFileList();
+                                document.getElementById('check1').checked = false;
+                                document.getElementById('check2').checked = false;
+                                document.getElementById('check3').checked = false;
+                                document.getElementById('check4').checked = false;
+                                
+                                alert("Project submitted successfully! The teacher has been notified.");
+                            });
+                        }
+                    }, 50);
+                }
+            }
+        }
+
+        // File management functions
+        function previewFile(fileData, fileName, fileType) {
+            currentPreviewFile = { data: fileData, name: fileName, type: fileType };
+            
+            // Hide all preview elements
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('pdfPreview').style.display = 'none';
+            document.getElementById('textPreview').style.display = 'none';
+            document.getElementById('unsupportedPreview').style.display = 'none';
+            
+            // Set file name
+            document.getElementById('previewFileName').textContent = fileName;
+            
+            // Show appropriate preview based on file type
+            if (fileType.startsWith('image/')) {
+                document.getElementById('imagePreview').src = fileData;
+                document.getElementById('imagePreview').style.display = 'block';
+            } else if (fileType === 'application/pdf') {
+                document.getElementById('pdfPreview').src = fileData;
+                document.getElementById('pdfPreview').style.display = 'block';
+            } else if (fileType.startsWith('text/')) {
+                // For text files, we need to decode the base64 data
+                const textContent = atob(fileData.split(',')[1]);
+                document.getElementById('textPreview').textContent = textContent;
+                document.getElementById('textPreview').style.display = 'block';
+            } else {
+                document.getElementById('unsupportedPreview').style.display = 'block';
+            }
+            
+            // Show modal
+            document.getElementById('filePreviewModal').style.display = 'flex';
+        }
+
+        function closeFilePreview() {
+            document.getElementById('filePreviewModal').style.display = 'none';
+            currentPreviewFile = null;
+        }
+
+        function downloadFile(fileData, fileName) {
+            const link = document.createElement('a');
+            link.href = fileData;
+            link.download = fileName;
+            link.click();
+        }
+
+        function downloadCurrentFile() {
+            if (currentPreviewFile) {
+                downloadFile(currentPreviewFile.data, currentPreviewFile.name);
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Helper functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function formatTime(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // Check if user is already logged in
+        window.onload = function() {
+            const loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                showDashboard(loggedInUser);
+            }
+        };
+
+        // Allow login with Enter key
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById("loginPage").classList.contains("hidden") === false) {
+                login();
+            }
         });
-      }
-    });
-    
-    if (allNotifications.length === 0) {
-      container.innerHTML = "<p>No notifications</p>";
-      return;
-    }
-    
-    // Show most recent first
-    allNotifications.reverse().forEach(notification => {
-      container.innerHTML += `
-        <div class="report">
-          <b>${notification.group}</b>: ${notification.text}
-          <span class="timestamp">${formatDate(notification.timestamp)}</span>
-        </div>
-      `;
-    });
-  }
-
-  function uploadFile() {
-    const fileInput = document.getElementById('groupFileUpload');
-    const username = localStorage.getItem("loggedInUser");
-    
-    if (fileInput.files.length === 0) {
-      showAlert("student", "Please select a file to upload", "error");
-      return;
-    }
-    
-    const file = fileInput.files[0];
-    const group = groups.find(g => g.students.includes(username));
-    
-    if (group) {
-      if (!group.files) group.files = [];
-      
-      group.files.push({
-        name: file.name,
-        size: file.size,
-        uploadedBy: username,
-        timestamp: new Date().toISOString()
-      });
-      
-      // Add notification
-      group.notifications.push(`${username} uploaded a file: ${file.name} in ${group.name}`);
-      
-      localStorage.setItem("groups", JSON.stringify(groups));
-      showAlert("student", "File uploaded successfully", "success");
-      updateSharedFiles(group);
-      fileInput.value = "";
-      
-      // Update teacher notifications if teacher is logged in
-      if (localStorage.getItem("role") === "teacher") {
-        checkTeacherNotifications();
-      }
-    }
-  }
-  
-  function updateSharedFiles(group) {
-    const container = document.getElementById("sharedFilesList");
-    
-    if (!group.files || group.files.length === 0) {
-      container.innerHTML = "<p>No files shared yet</p>";
-      return;
-    }
-    
-    container.innerHTML = "<h4>Shared Files:</h4>";
-    
-    group.files.forEach(file => {
-      container.innerHTML += `
-        <div class="file-item">
-          <div>
-            <strong>${file.name}</strong>
-            <div>Uploaded by ${file.uploadedBy} • ${formatFileSize(file.size)}</div>
-            <span class="timestamp">${formatDate(file.timestamp)}</span>
-          </div>
-          <button class="secondary" style="width: auto;">Download</button>
-        </div>
-      `;
-    });
-  }
-
-  function logout() {
-    localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("role");
-    location.reload();
-  }
-
-  // Auto-login if session exists
-  window.onload = () => {
-    let user = localStorage.getItem("loggedInUser");
-    let role = localStorage.getItem("role");
-    if (user && role) showDashboard(role, user);
-  };
-</script>
-
+    </script>
 </body>
 </html>
